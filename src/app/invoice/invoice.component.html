@@ -1,0 +1,110 @@
+<div class="invoice-page">
+    <div class="invoice-container">
+
+        <!-- ════════════════════════════════════════════ -->
+        <!-- HEADER: Company + RUT Box                   -->
+        <!-- ════════════════════════════════════════════ -->
+        <div class="header">
+            <div class="header-left">
+                <div class="company-logo">
+                    <img src="pro-home-logo.png" alt="Pro Home - ¡Vive la Experiencia!" class="logo-img">
+                </div>
+                <div class="company-info">
+                    <p class="company-name">PRO HOME SPA</p>
+                    <p>ACTIVIDADES INMOBILIARIAS REALIZADAS A CAMBIO DE UNA RETRIBUCION O POR</p>
+                    <p>Avenida Balmaceda 2455 oficina 1209, ANTOFAGASTA</p>
+                    <p>Teléfono: 56931319706</p>
+                    <p>Email: <a href="mailto:contacto@pro-home.cl">contacto&#64;pro-home.cl</a></p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="rut-box">
+                    <p class="rut-number">R.U.T: 77.132.948-9</p>
+                    <p class="comprobante-label">COMPROBANTE DE PAGO</p>
+                    <p class="folio-label">Folio N° {{ folioNumero }}</p>
+                </div>
+                <p class="sii-label">S.I.I. - Antofagasta</p>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════════ -->
+        <!-- CUSTOMER INFO                               -->
+        <!-- ════════════════════════════════════════════ -->
+        @if (data) {
+        <div class="customer-section">
+            <div class="customer-grid-simple">
+                <div class="field-group">
+                    <label>Señor (es)</label>
+                    <span class="field-value">{{ data.senor }}</span>
+                </div>
+                <div class="field-group">
+                    <label>R.U.T</label>
+                    <span class="field-value">{{ data.rutCliente }}</span>
+                </div>
+                <div class="field-group">
+                    <label>Fecha Documento</label>
+                    <span class="field-value">{{ formatDate(data.fechaDocumento) }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════════ -->
+        <!-- LINE ITEMS TABLE                            -->
+        <!-- ════════════════════════════════════════════ -->
+        <div class="items-section">
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th class="col-item">Item</th>
+                        <th class="col-codigo">Código</th>
+                        <th class="col-detalle">Detalle</th>
+                        <th class="col-cant">Cant</th>
+                        <th class="col-precio">P. Unitario</th>
+                        <th class="col-desc">Rec/Desc</th>
+                        <th class="col-total">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (item of lineItems; track $index; let i = $index) {
+                    <tr>
+                        <td class="col-item">{{ i + 1 }}</td>
+                        <td class="col-codigo">{{ item.codigo }}</td>
+                        <td class="col-detalle">{{ item.detalle }}</td>
+                        <td class="col-cant num">{{ item.cantidad }}</td>
+                        <td class="col-precio num">{{ formatCurrency(item.precioUnitario || 0) }}</td>
+                        <td class="col-desc num">{{ formatCurrency(item.recDesc || 0) }}</td>
+                        <td class="col-total amount">{{ formatCurrency(getLineTotal(item)) }}</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ════════════════════════════════════════════ -->
+        <!-- FOOTER: Comentario + Total                  -->
+        <!-- ════════════════════════════════════════════ -->
+        <div class="footer-section">
+            <div class="footer-left">
+                @if (data.comentario) {
+                <div class="comentario-box">
+                    <label>Comentario</label>
+                    <p class="comment-text">{{ data.comentario }}</p>
+                </div>
+                }
+            </div>
+            <div class="footer-right">
+                <div class="totals-grid">
+                    <div class="total-row grand-total">
+                        <span class="total-label">Total</span>
+                        <span class="total-value">{{ formatCurrency(total) }}</span>
+                    </div>
+                    @if (totalEnPalabras) {
+                    <div class="total-words">{{ totalEnPalabras }}</div>
+                    }
+                </div>
+            </div>
+        </div>
+        }
+
+    </div>
+</div>

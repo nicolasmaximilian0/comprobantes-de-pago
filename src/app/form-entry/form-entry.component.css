@@ -1,0 +1,416 @@
+/* ═══════════════════════════════════════════════ */
+/* Form Entry – Emitir Comprobante                 */
+/* ═══════════════════════════════════════════════ */
+
+:host {
+    display: block;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    color: #1e293b;
+}
+
+/* ── Page ── */
+.form-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+    padding: 40px 16px;
+    display: flex;
+    justify-content: center;
+}
+
+/* ── Card ── */
+.form-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 860px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    align-self: flex-start;
+}
+
+/* ── Header ── */
+.form-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 28px 32px;
+    background: #ffffff;
+    color: #1e293b;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.form-logo {
+    height: 56px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    padding: 6px 10px;
+}
+
+.form-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.3px;
+}
+
+.form-subtitle {
+    font-size: 13px;
+    color: #64748b;
+    margin: 4px 0 0;
+}
+
+/* ── Sections ── */
+.form-section {
+    padding: 24px 32px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.form-section h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #334155;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 20px;
+}
+
+.form-section h2 svg {
+    width: 18px;
+    height: 18px;
+    color: #64748b;
+}
+
+/* ── Fields ── */
+.fields-row {
+    display: flex;
+    gap: 16px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.flex-2 {
+    flex: 2;
+}
+
+.form-field label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 6px;
+}
+
+.form-section input,
+.form-section textarea {
+    font-family: inherit;
+    font-size: 14px;
+    color: #1e293b;
+    padding: 10px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    background: #f8fafc;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+.form-section input:hover,
+.form-section textarea:hover {
+    border-color: #cbd5e1;
+}
+
+.form-section input:focus,
+.form-section textarea:focus {
+    border-color: #3b82f6;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-section input::placeholder,
+.form-section textarea::placeholder {
+    color: #94a3b8;
+}
+
+.form-section textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* ── Items Table ── */
+.items-table-wrapper {
+    overflow-x: auto;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.entry-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.entry-table thead {
+    background: #f1f5f9;
+}
+
+.entry-table th {
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 10px;
+    border-bottom: 1.5px solid #e2e8f0;
+}
+
+.entry-table td {
+    padding: 4px 4px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.entry-table td input {
+    border: none !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    padding: 10px 8px !important;
+    font-size: 13px;
+    box-shadow: none !important;
+}
+
+.entry-table td input:focus {
+    background: #eff6ff !important;
+}
+
+.entry-table td input[type='number'] {
+    text-align: right;
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.entry-table td input[type='number']::-webkit-inner-spin-button,
+.entry-table td input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.item-row:hover {
+    background: #fafbff;
+}
+
+/* Table column widths */
+.th-num,
+.td-num {
+    width: 36px;
+    text-align: center;
+}
+
+.th-codigo {
+    width: 90px;
+}
+
+.th-detalle {
+    width: auto;
+}
+
+.th-cant {
+    width: 65px;
+}
+
+.th-precio {
+    width: 100px;
+}
+
+.th-desc {
+    width: 80px;
+}
+
+.th-total {
+    width: 100px;
+    text-align: right;
+}
+
+.th-action {
+    width: 36px;
+}
+
+.td-num {
+    font-weight: 600;
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+.td-total {
+    text-align: right;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    padding-right: 12px !important;
+    color: #1e293b;
+}
+
+.td-action {
+    text-align: center;
+}
+
+/* ── Items Footer ── */
+.items-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+}
+
+.btn-add-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 1.5px dashed #cbd5e1;
+    border-radius: 8px;
+    background: transparent;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.btn-add-item:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+    background: #eff6ff;
+}
+
+.btn-add-item svg {
+    width: 16px;
+    height: 16px;
+}
+
+.running-total {
+    font-size: 15px;
+    color: #475569;
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+}
+
+.running-total strong {
+    font-size: 20px;
+    font-weight: 800;
+    color: #1e293b;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ── Delete Button ── */
+.btn-del {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: none;
+    background: transparent;
+    color: #cbd5e1;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.btn-del:hover {
+    background: #fef2f2;
+    color: #ef4444;
+}
+
+.btn-del svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* ── Submit Bar ── */
+.submit-bar {
+    padding: 24px 32px 32px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-emitir {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 40px;
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);
+    transition: all 0.2s;
+}
+
+.btn-emitir:hover:not(:disabled) {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+    transform: translateY(-1px);
+}
+
+.btn-emitir:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+}
+
+.btn-emitir:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.btn-emitir svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* ── Spinner ── */
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ── Hidden PDF render area ── */
+.pdf-render-area {
+    position: fixed;
+    left: -9999px;
+    top: 0;
+    width: 820px;
+    z-index: -1;
+    background: #ffffff;
+    opacity: 0;
+    overflow: hidden;
+}

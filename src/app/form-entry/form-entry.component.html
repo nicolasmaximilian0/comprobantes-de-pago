@@ -1,0 +1,140 @@
+<div class="form-page">
+
+    <!-- ═══ FORM CARD ═══ -->
+    <div class="form-card">
+        <div class="form-header">
+            <img src="pro-home-logo.png" alt="Pro Home" class="form-logo">
+            <div>
+                <h1>Emitir Comprobante de Pago</h1>
+                <p class="form-subtitle">Complete los datos para generar el documento</p>
+            </div>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="emitirComprobante()">
+
+            <!-- ── Client Info ── -->
+            <section class="form-section">
+                <h2>
+                    <svg viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+                    </svg>
+                    Datos del Cliente
+                </h2>
+                <div class="fields-row">
+                    <div class="form-field flex-2">
+                        <label for="senor">Nombre o Razón Social</label>
+                        <input id="senor" formControlName="senor" placeholder="Ej: Juan Pérez González">
+                    </div>
+                    <div class="form-field flex-1">
+                        <label for="rutCliente">R.U.T</label>
+                        <input id="rutCliente" formControlName="rutCliente" placeholder="Ej: 12.345.678-9">
+                    </div>
+                    <div class="form-field flex-1">
+                        <label for="fechaDocumento">Fecha del Documento</label>
+                        <input id="fechaDocumento" formControlName="fechaDocumento" type="date">
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── Line Items ── -->
+            <section class="form-section">
+                <h2>
+                    <svg viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    Detalle de Servicios / Productos
+                </h2>
+
+                <div class="items-table-wrapper">
+                    <table class="entry-table">
+                        <thead>
+                            <tr>
+                                <th class="th-num">#</th>
+                                <th class="th-codigo">Código</th>
+                                <th class="th-detalle">Descripción</th>
+                                <th class="th-cant">Cant.</th>
+                                <th class="th-precio">P. Unitario</th>
+                                <th class="th-desc">Desc.</th>
+                                <th class="th-total">Total</th>
+                                <th class="th-action"></th>
+                            </tr>
+                        </thead>
+                        <tbody formArrayName="lineItems">
+                            @for (item of lineItems.controls; track item; let i = $index) {
+                            <tr [formGroupName]="i" class="item-row">
+                                <td class="td-num">{{ i + 1 }}</td>
+                                <td><input formControlName="codigo" placeholder="Código"></td>
+                                <td><input formControlName="detalle" placeholder="Descripción del servicio o producto">
+                                </td>
+                                <td><input formControlName="cantidad" type="number" placeholder="0" min="0"></td>
+                                <td><input formControlName="precioUnitario" type="number" placeholder="0" min="0"></td>
+                                <td><input formControlName="recDesc" type="number" placeholder="0"></td>
+                                <td class="td-total">{{ formatCurrency(getLineTotal(i)) }}</td>
+                                <td class="td-action">
+                                    @if (lineItems.length > 1) {
+                                    <button type="button" class="btn-del" (click)="removeLineItem(i)" title="Eliminar">
+                                        <svg viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                    }
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="items-footer">
+                    <button type="button" class="btn-add-item" (click)="addLineItem()">
+                        <svg viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        Agregar línea
+                    </button>
+                    <div class="running-total">
+                        <span>Total:</span>
+                        <strong>{{ formatCurrency(getTotal()) }}</strong>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── Comments ── -->
+            <section class="form-section">
+                <h2>
+                    <svg viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    Comentario
+                </h2>
+                <textarea formControlName="comentario" rows="3" placeholder="Observaciones opcionales…"></textarea>
+            </section>
+
+            <!-- ── Submit ── -->
+            <div class="submit-bar">
+                <button type="submit" class="btn-emitir" [disabled]="isGenerating">
+                    @if (isGenerating) {
+                    <span class="spinner"></span>
+                    Generando PDF…
+                    } @else {
+                    <svg viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    Emitir Comprobante
+                    }
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
