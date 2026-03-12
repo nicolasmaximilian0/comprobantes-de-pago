@@ -306,6 +306,9 @@ export class FormEntryComponent implements OnInit {
             pdf.setTextColor(30, 41, 59);
 
             let grandTotal = 0;
+            const lineSpacing = 4;   // mm between text baselines inside a row
+            const rowPadding = 3;    // extra vertical padding above+below text
+
             for (let i = 0; i < lineItems.length; i++) {
                 const item = lineItems[i];
                 const cant = item.cantidad || 0;
@@ -314,7 +317,14 @@ export class FormEntryComponent implements OnInit {
                 const lineTotal = cant * precio - desc;
                 grandTotal += lineTotal;
 
-                const rowY = y + 4.5;
+                // Detalle — split first so we know how many lines it needs
+                const detalle = item.detalle || '';
+                const maxDetalleW = cols[2].w - 4;
+                const detalleLines = pdf.splitTextToSize(detalle, maxDetalleW);
+
+                // Dynamic row height: at least rowH, expands for wrapped text
+                const effectiveRowH = Math.max(rowH, detalleLines.length * lineSpacing + rowPadding);
+                const rowY = y + rowPadding + lineSpacing * 0.5; // vertically centred baseline for single-line cols
 
                 // Item number
                 pdf.text(String(i + 1), tableX + cols[0].x + cols[0].w / 2, rowY, { align: 'center' });
@@ -322,11 +332,7 @@ export class FormEntryComponent implements OnInit {
                 // Código
                 pdf.text(item.codigo || '', tableX + cols[1].x + 2, rowY);
 
-                // Detalle — use splitTextToSize so the full text is shown if it fits,
-                // and wraps to a second line only when truly too wide for the column.
-                const detalle = item.detalle || '';
-                const maxDetalleW = cols[2].w - 4; // column width minus small padding (mm)
-                const detalleLines = pdf.splitTextToSize(detalle, maxDetalleW);
+                // Detalle (may be multi-line)
                 pdf.text(detalleLines, tableX + cols[2].x + 2, rowY);
 
                 // Cant
@@ -343,10 +349,10 @@ export class FormEntryComponent implements OnInit {
                 pdf.text(this.formatCurrency(lineTotal), tableX + cols[6].x + cols[6].w - 2, rowY, { align: 'right' });
                 pdf.setFont('helvetica', 'normal');
 
-                // Row bottom line
+                // Row bottom line — drawn after the full row height
                 pdf.setDrawColor(241, 245, 249);
-                pdf.line(tableX, y + rowH, tableX + contentW, y + rowH);
-                y += rowH;
+                pdf.line(tableX, y + effectiveRowH, tableX + contentW, y + effectiveRowH);
+                y += effectiveRowH;
             }
 
             // Bottom border of table
