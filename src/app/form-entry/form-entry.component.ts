@@ -1,4 +1,4 @@
-import { Component, NgZone, ChangeDetectorRef } from '@angular/core';
+import { Component, NgZone, ChangeDetectorRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
     ReactiveFormsModule,
@@ -8,6 +8,15 @@ import {
 } from '@angular/forms';
 import { jsPDF } from 'jspdf';
 
+export interface SavedDocument {
+    folio: number;
+    senor: string;
+    fechaDocumento: string;
+    total: number;
+    issuedAt: string;       // ISO timestamp of when it was emitted
+    formData: any;          // full form value snapshot for re-generation
+}
+
 @Component({
     selector: 'app-form-entry',
     standalone: true,
@@ -15,10 +24,12 @@ import { jsPDF } from 'jspdf';
     templateUrl: './form-entry.component.html',
     styleUrl: './form-entry.component.css',
 })
-export class FormEntryComponent {
+export class FormEntryComponent implements OnInit {
     form: FormGroup;
     isGenerating = false;
+    isReDownloading: number | null = null;  // folio currently being re-downloaded
     folioNumero = 1532;
+    recentDocs: SavedDocument[] = [];
 
     constructor(
         private fb: FormBuilder,
@@ -34,6 +45,23 @@ export class FormEntryComponent {
         });
 
         this.addLineItem();
+    }
+
+    ngOnInit(): void {
+        this.loadRecentDocs();
+    }
+
+    private loadRecentDocs(): void {
+        try {
+            const raw = localStorage.getItem('recentDocs');
+            this.recentDocs = raw ? JSON.parse(raw) : [];
+        } catch {
+            this.recentDocs = [];
+        }
+    }
+
+    private saveRecentDocs(): void {
+        localStorage.setItem('recentDocs', JSON.stringify(this.recentDocs));
     }
 
     get lineItems(): FormArray {
@@ -84,6 +112,20 @@ export class FormEntryComponent {
         );
     }
 
+    formatDate(dateStr: string): string {
+        if (!dateStr) return '';
+        const d = new Date(dateStr + 'T12:00:00');
+        return d.toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    }
+
+    formatIssuedAt(iso: string): string {
+        if (!iso) return '';
+        const d = new Date(iso);
+        const date = d.toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const time = d.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
+        return `${date} ${time}`;
+    }
+
     emitirComprobante(): void {
         this.isGenerating = true;
         this.cdr.detectChanges();
@@ -92,14 +134,37 @@ export class FormEntryComponent {
         this.folioNumero = storedFolio ? parseInt(storedFolio, 10) : 1532;
         localStorage.setItem('folioNumero', String(this.folioNumero + 1));
 
+        const folio = this.folioNumero;
+        const formData = this.form.value;
+
         this.ngZone.runOutsideAngular(() => {
-            setTimeout(() => this.generateVectorPdf(), 100);
+            setTimeout(() => this.generateVectorPdf(formData, folio, true), 100);
         });
     }
 
-    private async generateVectorPdf(): Promise<void> {
+    downloadDocument(doc: SavedDocument): void {
+        this.isReDownloading = doc.folio;
+        this.cdr.detectChanges();
+        this.ngZone.runOutsideAngular(() => {
+            setTimeout(async () => {
+                await this.generateVectorPdf(doc.formData, doc.folio);
+                this.ngZone.run(() => {
+                    this.isReDownloading = null;
+                    this.cdr.detectChanges();
+                });
+            }, 50);
+        });
+    }
+
+    deleteDocument(folio: number): void {
+        this.recentDocs = this.recentDocs.filter(d => d.folio !== folio);
+        this.saveRecentDocs();
+    }
+
+    private async generateVectorPdf(formData: any, folio: number, isNewEmission = false): Promise<void> {
         try {
-            const formVal = this.form.value;
+            const formVal = formData;
+            const currentFolio = folio;
             const lineItems = formVal.lineItems || [];
 
             const pdf = new jsPDF('p', 'mm', 'letter');
@@ -147,7 +212,7 @@ export class FormEntryComponent {
             pdf.text('COMPROBANTE DE PAGO', boxX + boxW / 2, boxY + 13, { align: 'center' });
 
             pdf.setFontSize(10);
-            pdf.text(`Folio N° ${this.folioNumero}`, boxX + boxW / 2, boxY + 19, { align: 'center' });
+            pdf.text(`Folio N° ${currentFolio}`, boxX + boxW / 2, boxY + 19, { align: 'center' });
 
             // S.I.I. label under box
             pdf.setFont('helvetica', 'normal');
@@ -345,7 +410,24 @@ export class FormEntryComponent {
             // SAVE — use standard jsPDF API
             // ─────────────────────────────────────────────────────
             console.log('[PDF] Saving file via jsPDF standard API...');
-            await pdf.save(`comprobante-de-pago-${this.folioNumero}.pdf`, { returnPromise: true });
+            await pdf.save(`comprobante-de-pago-${currentFolio}.pdf`, { returnPromise: true });
+
+            // Persist entry only for new emissions (not re-downloads)
+            if (isNewEmission) {
+                const newDoc: SavedDocument = {
+                    folio: currentFolio,
+                    senor: formVal.senor || '',
+                    fechaDocumento: formVal.fechaDocumento || '',
+                    total: grandTotal,
+                    issuedAt: new Date().toISOString(),
+                    formData: formVal,
+                };
+                this.ngZone.run(() => {
+                    this.recentDocs = [newDoc, ...this.recentDocs].slice(0, 20);
+                    this.saveRecentDocs();
+                    this.cdr.detectChanges();
+                });
+            }
             console.log('[PDF] Save completed.');
 
         } catch (error) {

@@ -14,7 +14,9 @@
     background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
     padding: 40px 16px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
 }
 
 /* ── Card ── */
@@ -506,4 +508,251 @@
         padding: 16px;
         font-size: 18px;
     }
+
+    /* Recent card mobile */
+    .recent-card {
+        border-radius: 12px;
+    }
+
+    .recent-header {
+        padding: 20px 20px;
+        font-size: 14px;
+    }
+
+    .recent-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .recent-table td,
+    .recent-table th {
+        white-space: nowrap;
+    }
+
+    .col-actions {
+        min-width: 100px;
+    }
+}
+
+/* ═══════════════════════════════════════════════ */
+/* RECENT DOCUMENTS CARD                           */
+/* ═══════════════════════════════════════════════ */
+
+.recent-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 860px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    margin-bottom: 40px;
+}
+
+.recent-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 32px;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #334155;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.recent-header svg {
+    width: 18px;
+    height: 18px;
+    color: #64748b;
+    flex-shrink: 0;
+}
+
+.doc-count {
+    margin-left: 4px;
+    background: #dc2626;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 20px;
+    padding: 1px 8px;
+    line-height: 1.6;
+}
+
+/* Empty state */
+.recent-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 48px 32px;
+    color: #94a3b8;
+}
+
+.recent-empty svg {
+    width: 52px;
+    height: 52px;
+    opacity: 0.4;
+}
+
+.recent-empty p {
+    font-size: 14px;
+    color: #94a3b8;
+    margin: 0;
+}
+
+/* Table */
+.recent-table-wrapper {
+    overflow-x: auto;
+}
+
+.recent-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.recent-table thead {
+    background: #f8fafc;
+}
+
+.recent-table th {
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 16px;
+    border-bottom: 1.5px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+.recent-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+    color: #334155;
+}
+
+.recent-row:last-child td {
+    border-bottom: none;
+}
+
+.recent-row:hover {
+    background: #fafbff;
+}
+
+.folio-cell {
+    font-weight: 700;
+    color: #dc2626;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.senor-cell {
+    font-weight: 500;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.issued-cell {
+    color: #64748b;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.monto-cell {
+    text-align: right;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: #1e293b;
+    white-space: nowrap;
+}
+
+.col-monto {
+    text-align: right;
+}
+
+.actions-cell {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.col-actions {
+    width: 110px;
+}
+
+/* Download button */
+.btn-download-doc {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    background: #eff6ff;
+    color: #2563eb;
+    border: 1.5px solid #bfdbfe;
+    border-radius: 7px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.btn-download-doc:hover:not(:disabled) {
+    background: #2563eb;
+    color: #fff;
+    border-color: #2563eb;
+}
+
+.btn-download-doc:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-download-doc svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* Delete button */
+.btn-delete-doc {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    color: #cbd5e1;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+}
+
+.btn-delete-doc:hover {
+    background: #fef2f2;
+    color: #ef4444;
+    border-color: #fecaca;
+}
+
+.btn-delete-doc svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* Small spinner for re-download */
+.spinner-sm {
+    width: 13px;
+    height: 13px;
+    border: 2px solid rgba(37, 99, 235, 0.3);
+    border-top-color: #2563eb;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
 }
