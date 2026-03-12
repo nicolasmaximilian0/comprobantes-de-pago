@@ -257,13 +257,12 @@ export class FormEntryComponent {
                 // Código
                 pdf.text(item.codigo || '', tableX + cols[1].x + 2, rowY);
 
-                // Detalle (truncate if too long)
+                // Detalle — use splitTextToSize so the full text is shown if it fits,
+                // and wraps to a second line only when truly too wide for the column.
                 const detalle = item.detalle || '';
-                const maxDetalleW = cols[2].w - 4;
-                const truncated = pdf.getStringUnitWidth(detalle) * 9 / pdf.internal.scaleFactor > maxDetalleW
-                    ? detalle.substring(0, 40) + '...'
-                    : detalle;
-                pdf.text(truncated, tableX + cols[2].x + 2, rowY);
+                const maxDetalleW = cols[2].w - 4; // column width minus small padding (mm)
+                const detalleLines = pdf.splitTextToSize(detalle, maxDetalleW);
+                pdf.text(detalleLines, tableX + cols[2].x + 2, rowY);
 
                 // Cant
                 if (cant) pdf.text(String(cant), tableX + cols[3].x + cols[3].w - 2, rowY, { align: 'right' });
