@@ -189,7 +189,7 @@ export class FormEntryComponent implements OnInit {
             pdf.setTextColor(71, 85, 105);
             pdf.text('ACTIVIDADES INMOBILIARIAS REALIZADAS A CAMBIO', margin, y + 10);
             pdf.text('DE UNA RETRIBUCION O POR', margin, y + 13.5);
-            pdf.text('Avenida Balmaceda 2455 oficina 1209, ANTOFAGASTA', margin, y + 17.5);
+            pdf.text('AV BALMACEDA 2455 OFICINA 604, ANTOFAGASTA', margin, y + 17.5);
             pdf.text('Teléfono: 56931319706', margin, y + 21);
             pdf.text('Email: contacto@pro-home.cl', margin, y + 24.5);
 
